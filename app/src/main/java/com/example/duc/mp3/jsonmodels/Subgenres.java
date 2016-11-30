@@ -1,5 +1,7 @@
 package com.example.duc.mp3.jsonmodels;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -7,6 +9,7 @@ import java.util.ArrayList;
  */
 
 public class Subgenres {
+    @SerializedName("subgenres")
     ArrayList<JsonMedia> jsonMedias;
 
     public Subgenres(ArrayList<JsonMedia> jsonMedias) {

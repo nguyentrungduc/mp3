@@ -1,6 +1,7 @@
 package com.example.duc.mp3;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +13,12 @@ import com.example.duc.mp3.jsonmodels.Jsonmp3;
 import com.example.duc.mp3.jsonmodels.Subgenres;
 
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
@@ -28,8 +33,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Preferences.init(this);
+        ButterKnife.bind(this);
         setupUI();
-        get();
+
 
     }
 
@@ -64,37 +71,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void get() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.MP3_API)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        MP3Service service = retrofit.create(MP3Service.class);
-        service.getObject().enqueue(new Callback<Jsonmp3[]>() {
-            @Override
-            public void onResponse(Call<Jsonmp3[]> call, Response<Jsonmp3[]> response) {
-                Log.d(TAG,"ONR");
-                Jsonmp3[] jsonmp3s = response.body();
-                Jsonmp3 jsonmp3 = jsonmp3s[3];
-                Subgenres subgenres = jsonmp3.getSubgenres();
-                ArrayList<JsonMedia> jsonMedias = subgenres.getJsonMedias();
-                for(JsonMedia jsonMedia : jsonMedias){
-                    Log.d(TAG, String.valueOf(jsonMedia.getId()));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Jsonmp3[]> call, Throwable t) {
-                Log.d(TAG,"ONF");
-                Log.d(TAG,t.toString());
-
-            }
-        });
-
-    }
-
 
 
 
 }
+
+
+
+
 

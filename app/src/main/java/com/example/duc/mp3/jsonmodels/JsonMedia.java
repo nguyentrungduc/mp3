@@ -8,20 +8,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class JsonMedia {
     @SerializedName("id")
-    private  int id;
+    private String id;
     @SerializedName("translation_key")
     private String translation_key;
 
-    public JsonMedia(int id, String translation_key) {
-        this.id = id;
-        this.translation_key = translation_key;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

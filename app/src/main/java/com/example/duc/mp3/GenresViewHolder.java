@@ -19,6 +19,7 @@ public class GenresViewHolder extends RecyclerView.ViewHolder {
     ImageView genresiv;
     @BindView(R.id.genres_Tv)
     TextView genrestv;
+
     public GenresViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);

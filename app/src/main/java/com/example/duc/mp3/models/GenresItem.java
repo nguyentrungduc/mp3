@@ -9,13 +9,16 @@ import io.realm.RealmObject;
  * Created by DUC on 26/11/2016.
  */
 
-public class GenresItem {
+public class GenresItem extends RealmObject{
     private String title;
     private int imageId;
 
     public GenresItem(String title, int imageId) {
         this.title = title;
         this.imageId = imageId;
+    }
+
+    public GenresItem() {
     }
 
     public String getTitle() {
