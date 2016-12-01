@@ -3,6 +3,7 @@ package com.example.duc.mp3.managers;
 import android.content.Context;
 
 import com.example.duc.mp3.models.GenresItem;
+import com.example.duc.mp3.models.TopSongItem;
 
 import java.util.List;
 
@@ -37,6 +38,12 @@ public class DbContext {
     public void add(GenresItem genresItem){
         realm.beginTransaction();
         realm.copyToRealm(genresItem);
+        realm.commitTransaction();
+    }
+
+    public void addTopSong(TopSongItem topSongItem){
+        realm.beginTransaction();
+        realm.copyToRealm(topSongItem);
         realm.commitTransaction();
     }
 
@@ -83,6 +90,56 @@ public class DbContext {
         realm.beginTransaction();
         realm.deleteAll();
         realm.commitTransaction();
+    }
+
+    public List<GenresItem> findAllFavorite(){
+        Realm realm = Realm.getDefaultInstance();
+
+        //3 Query - lazy load
+        RealmResults<GenresItem> genresItems =
+                realm.where(GenresItem.class)
+                        .equalTo("isFavorite",true).findAll();
+        return genresItems;
+    }
+
+    public List<TopSongItem> findAllTopSong(){
+        Realm realm = Realm.getDefaultInstance();
+
+        RealmResults<TopSongItem> topSongItems =
+                realm.where(TopSongItem.class)
+                        .findAll();
+        return topSongItems;
+    }
+
+
+    public long getSizeTopSong(){
+        return realm.where(TopSongItem.class).count();
+    }
+
+    public boolean check(String id){
+        Realm realm = Realm.getDefaultInstance();
+
+        RealmResults<TopSongItem> topSongItems =
+                realm.where(TopSongItem.class)
+                        .findAll();
+        for(TopSongItem topSongItem : topSongItems){
+            if(topSongItem.getId().equals(id) == true){
+                return false;
+            }
+        }
+        return true;
 
     }
+
+    public List<TopSongItem> findTopSongByID(String id){
+        Realm realm = Realm.getDefaultInstance();
+
+
+        RealmResults<TopSongItem> topSongItems =
+                realm.where(TopSongItem.class)
+                        .equalTo("id", id).findAll();
+        return topSongItems;
+    }
+
+
 }

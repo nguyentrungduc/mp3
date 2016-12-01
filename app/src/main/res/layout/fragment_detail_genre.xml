@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="#472859"
     android:saveEnabled="false"
+    android:clickable="true"
     tools:context="com.example.duc.mp3.DetailGenreFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -69,16 +70,19 @@
                 android:layout_weight="4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <TextView
+                        android:textColor="#FFFFFF"
                         android:layout_marginLeft="20dp"
                         android:textSize="20dp"
                         android:id="@+id/name_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <TextView
+                        android:textColor="#FFFFFF"
                         android:layout_marginLeft="20dp"
                         android:text="50 song"
                         android:layout_alignParentBottom="true"

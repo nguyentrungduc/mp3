@@ -79,6 +79,8 @@ public class GenresFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         Log.d(TAG, String.valueOf(position));
                         Preferences.getInstance().putIndexTouch(position);
+                        String s = DbContext.getInstance().findAll().get(position).getId();
+                        Preferences.getInstance().putIDTouch(s);
                         final FragmentTransaction ft = getFragmentManager().beginTransaction().addToBackStack(null);
                         ft.replace(R.id.genre_Rl, new DetailGenreFragment());
                         ft.commit();

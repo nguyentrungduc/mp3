@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 public class Preferences {
     private static final String KEY = "mp3";
     private static final String INDEX_TOUCH_KEY = "Index";
+    private static final String ID_TOUCH_KEY = "Id";
     private SharedPreferences sharedPreferences;
 
     public Preferences(Context context) {
@@ -23,6 +24,14 @@ public class Preferences {
 
     public void putIndexTouch(int index) {
         sharedPreferences.edit().putInt(INDEX_TOUCH_KEY, index).commit();
+    }
+
+    public String getIDTouch() {
+        return sharedPreferences.getString(ID_TOUCH_KEY, null);
+    }
+
+    public void putIDTouch(String id) {
+        sharedPreferences.edit().putString(ID_TOUCH_KEY, id).commit();
     }
 
 

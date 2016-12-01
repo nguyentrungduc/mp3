@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.duc.mp3.managers.DbContext;
+import com.example.duc.mp3.managers.NetWorkManager;
+import com.example.duc.mp3.managers.Preferences;
 import com.example.duc.mp3.models.TopSongItem;
 
 /**
@@ -30,9 +33,17 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongViewHolder> {
 
     @Override
     public void onBindViewHolder(TopSongViewHolder holder, int position) {
-        TopSongItem topSongItem = TopSongItem.list.get(position);
-        holder.setData(topSongItem, context);
-
+        if(NetWorkManager.getInstance().isConnectedToInternet()) {
+            TopSongItem topSongItem = TopSongItem.list.get(position);
+            holder.setData(topSongItem, context);
+        }
+        else{
+            TopSongItem topSongItem =
+                    DbContext.getInstance().
+                            findTopSongByID(Preferences.getInstance().getIDTouch())
+                            .get(position);
+            holder.setData(topSongItem, context);
+        }
     }
 
 

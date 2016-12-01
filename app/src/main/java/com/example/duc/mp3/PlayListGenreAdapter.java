@@ -5,7 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.duc.mp3.models.PlayListItem;
+import com.example.duc.mp3.managers.DbContext;
+import com.example.duc.mp3.models.GenresItem;
 
 /**
  * Created by DUC on 01/12/2016.
@@ -24,13 +25,13 @@ public class PlayListGenreAdapter extends RecyclerView.Adapter<PlayListGenreView
 
     @Override
     public void onBindViewHolder(PlayListGenreViewHolder holder, int position) {
-        PlayListItem playListItem = PlayListItem.list.get(position);
-        holder.setData(playListItem);
+        GenresItem genresItem = DbContext.getInstance().findAllFavorite().get(position);
+        holder.setData(genresItem);
 
     }
 
     @Override
     public int getItemCount() {
-        return PlayListItem.list.size();
+        return DbContext.getInstance().findAllFavorite().size();
     }
 }

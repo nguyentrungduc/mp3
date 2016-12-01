@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.duc.mp3.models.PlayListItem;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -24,7 +22,7 @@ public class PlaylistFragment extends Fragment {
     @BindView(R.id.genre_playlist_Rv)
     RecyclerView genrelistrv;
 
-    private PlayListGenreAdapter playListGenreAdapter;
+    public static PlayListGenreAdapter playListGenreAdapter = new PlayListGenreAdapter();
 
 
     private static final String TAG = MainActivity.class.toString();
@@ -47,18 +45,14 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG,"hihi"+ PlayListItem.list.size());
         genrelistrv.setAdapter(playListGenreAdapter);
+        playListGenreAdapter.notifyDataSetChanged();
     }
+
 
     private void setupUI(){
-        playListGenreAdapter = new PlayListGenreAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         genrelistrv.setLayoutManager(layoutManager);
-        genrelistrv.setAdapter(playListGenreAdapter);
-        Log.d(TAG,"hihi"+ PlayListItem.list.size());
     }
-
-
 
 }

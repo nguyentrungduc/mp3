@@ -5,6 +5,7 @@
     android:background="#472859"
     android:saveEnabled="false"
     android:id="@+id/genre_Rl"
+    android:clickable="true"
     tools:context="com.example.duc.mp3.GenresFragment">
 
     <!-- TODO: Update blank fragment layout -->

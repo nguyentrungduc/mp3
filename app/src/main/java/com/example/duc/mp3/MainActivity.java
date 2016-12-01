@@ -4,11 +4,25 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 
+import com.example.duc.mp3.http.GENREService;
+import com.example.duc.mp3.jsonmodels.FeedFather;
+import com.example.duc.mp3.jsonmodels.JsonInfo;
+import com.example.duc.mp3.managers.DbContext;
 import com.example.duc.mp3.managers.Preferences;
+import com.example.duc.mp3.models.TopSongItem;
 
+
+import java.util.List;
 
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,12 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
-
-
-
-
-
 
 
 }

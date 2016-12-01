@@ -3,6 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="80dp">
     <TextView
+        android:gravity="center"
+        android:textSize="25dp"
         android:textColor="#FFFFFF"
         android:id="@+id/play_list_genre_Tv"
         android:layout_marginLeft="15dp"

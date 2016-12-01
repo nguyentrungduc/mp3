@@ -17,9 +17,9 @@ import com.example.duc.mp3.http.GENREService;
 import com.example.duc.mp3.jsonmodels.FeedFather;
 import com.example.duc.mp3.jsonmodels.JsonInfo;
 import com.example.duc.mp3.managers.DbContext;
+import com.example.duc.mp3.managers.NetWorkManager;
 import com.example.duc.mp3.managers.Preferences;
 import com.example.duc.mp3.models.GenresItem;
-import com.example.duc.mp3.models.PlayListItem;
 import com.example.duc.mp3.models.TopSongItem;
 
 import java.util.List;
@@ -67,7 +67,7 @@ public class DetailGenreFragment extends Fragment {
         ButterKnife.bind(this, view);
         addListener();
         setupUI();
-        get();
+        setup();
         return view;
     }
 
@@ -79,6 +79,15 @@ public class DetailGenreFragment extends Fragment {
         }
     }
 
+    private void setup(){
+        if(NetWorkManager.getInstance().isConnectedToInternet()){
+            get();
+        }
+        else{
+
+        }
+    }
+
     private void get() {
         topSongAdapter = new TopSongAdapter(getContext());
         Retrofit retrofit = new Retrofit.Builder()
@@ -87,22 +96,40 @@ public class DetailGenreFragment extends Fragment {
                 .build();
 
         GENREService service = retrofit.create(GENREService.class);
+
         service.callFeed(genresItems.get(index).getId()).enqueue(new Callback<FeedFather>() {
             @Override
             public void onResponse(Call<FeedFather> call, Response<FeedFather> response) {
                 List<JsonInfo> jsonInfos = response.body().getFeed().getJsonInfoList();
+
                 for(JsonInfo jsonInfo : jsonInfos){
                     String name, artist, image;
                     name = jsonInfo.getName().getStrLabel();
                     artist = jsonInfo.getArtist().getStrLabel();
                     image = jsonInfo.getImage().get(1).getStrLabel();
-                    TopSongItem topSongItem = new TopSongItem(image, name, artist);
+                    TopSongItem topSongItem =
+                            new TopSongItem(image, name, artist);
                     TopSongItem.list.add(topSongItem);
                     topSongAdapter.notifyDataSetChanged();
                 }
+
+
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                 topsongrv.setLayoutManager(layoutManager);
                 topsongrv.setAdapter(topSongAdapter);
+                if(DbContext.getInstance().check(genresItems.get(index).getId()) == true){
+                    for(JsonInfo jsonInfo : jsonInfos){
+                        String name, artist, image;
+                        name = jsonInfo.getName().getStrLabel();
+                        artist = jsonInfo.getArtist().getStrLabel();
+                        image = jsonInfo.getImage().get(1).getStrLabel();
+                        TopSongItem topSongItemOffline =
+                                new TopSongItem(image, name, artist,genresItems.get(index).getId());
+                        DbContext.getInstance().addTopSong(topSongItemOffline);
+                    }
+
+                }
+
             }
 
             @Override
@@ -126,23 +153,16 @@ public class DetailGenreFragment extends Fragment {
             public void onClick(View v) {
                 if(DbContext.getInstance().findAll().get(index).getFavorite() == false) {
                     favoriteiv.setColorFilter(Color.parseColor("#F44336"));
-                    PlayListItem.list.add
-                            (new PlayListItem(genresItems.get(index).getTitle()));
                     GenresItem genresItem = DbContext.getInstance().findAll().get(index);
                     DbContext.getInstance().changeFavorite(genresItem);
-                    Log.d(TAG, String.valueOf(PlayListItem.list.size()+"  ?"));
+                    PlaylistFragment.playListGenreAdapter.notifyDataSetChanged();
+
                 }
                 else{
                     favoriteiv.setColorFilter(Color.parseColor("#00FFFFFF"));
-                    for(PlayListItem playListItem : PlayListItem.list){
-                        if(playListItem.getNameGenre() ==  genresItems.get(index).getTitle()){
-                            PlayListItem.list.remove(playListItem);
-                        }
-                    }
                     GenresItem genresItem = DbContext.getInstance().findAll().get(index);
                     DbContext.getInstance().changeNoFavorite(genresItem);
-                    Log.d(TAG, String.valueOf(PlayListItem.list.size()+"  !"));
-
+                    PlaylistFragment.playListGenreAdapter.notifyDataSetChanged();
                 }
 
             }

@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.duc.mp3.models.PlayListItem;
+import com.example.duc.mp3.models.GenresItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +22,7 @@ public class PlayListGenreViewHolder extends RecyclerView.ViewHolder{
         ButterKnife.bind(this, itemView);
     }
 
-    public void setData(PlayListItem playListItem){
-        playlistgenretv.setText(playListItem.getNameGenre());
+    public void setData(GenresItem genresItem){
+        playlistgenretv.setText(genresItem.getTitle());
     }
 }
