@@ -1,11 +1,13 @@
 package com.example.duc.mp3;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.duc.mp3.models.GenresItem;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,8 +27,9 @@ public class GenresViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void setData(GenresItem genresItem){
+    public void setData(GenresItem genresItem, Context context){
         genrestv.setText(genresItem.getTitle());
         genresiv.setImageResource(genresItem.getImageId());
+        Picasso.with(context).load(genresItem.getImageId()).into(genresiv);
     }
 }

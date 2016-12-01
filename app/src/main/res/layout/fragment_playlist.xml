@@ -5,6 +5,13 @@
     tools:context="com.example.duc.mp3.PlaylistFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/genre_playlist_Rv"
+        android:layout_marginStart="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
 
 
 </RelativeLayout>

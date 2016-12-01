@@ -6,10 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,10 +15,10 @@ import com.example.duc.mp3.http.MP3Service;
 import com.example.duc.mp3.jsonmodels.JsonMedia;
 import com.example.duc.mp3.jsonmodels.Jsonmp3;
 import com.example.duc.mp3.managers.DbContext;
+import com.example.duc.mp3.managers.NetWorkManager;
+import com.example.duc.mp3.managers.Preferences;
 import com.example.duc.mp3.models.GenresItem;
 import com.example.duc.mp3.utils.Utils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -41,7 +39,7 @@ public class GenresFragment extends Fragment {
     private static final String TAG = MainActivity.class.toString();
     @BindView(R.id.genres_Cv)
     RecyclerView genrescv;
-    GenresAdapter genresAdapter = new GenresAdapter();
+    GenresAdapter genresAdapter;
 
 
     public GenresFragment() {
@@ -61,6 +59,7 @@ public class GenresFragment extends Fragment {
     }
 
     private void setupUI() {
+        genresAdapter = new GenresAdapter(getContext());
         final GridLayoutManager manager = new
                 GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -72,7 +71,6 @@ public class GenresFragment extends Fragment {
         });
 
         genresAdapter.notifyDataSetChanged();
-
         genrescv.setLayoutManager(manager);
         genrescv.setAdapter(genresAdapter);
         genrescv.addOnItemTouchListener(
@@ -109,15 +107,21 @@ public class GenresFragment extends Fragment {
 
                 ArrayList<JsonMedia> jsonMedias = jsonmp3.getSubgenres();
                 for (JsonMedia jsonMedia : jsonMedias) {
+                    Log.d(TAG, String.valueOf(GenresItem.list.size()));
                     GenresItem genresItem = new GenresItem(jsonMedia.getTranslation_key(),
-                            Utils.GetIdByName("genre_"+jsonMedia.getId(),getContext()));
+                            Utils.GetIdByName("genre_"+jsonMedia.getId(),getContext()),jsonMedia.getId());
                     GenresItem.list.add
                             (genresItem);
-                    if(DbContext.getInstance().getSize() < jsonMedias.size()){
+                    genresAdapter.notifyDataSetChanged();
+                }
+                if(DbContext.getInstance().getSize() == 0){
+                    for (JsonMedia jsonMedia : jsonMedias) {
+                        GenresItem genresItem = new GenresItem(jsonMedia.getTranslation_key(),
+                                Utils.GetIdByName("genre_"+jsonMedia.getId(),getContext())
+                                ,jsonMedia.getId(),false);
                         DbContext.getInstance().add(genresItem);
                     }
-                    genresAdapter.notifyDataSetChanged();
-                    Log.d(TAG, String.valueOf(GenresItem.list.size()));
+
                 }
             }
 
@@ -128,6 +132,7 @@ public class GenresFragment extends Fragment {
 
             }
         });
+
 
 
     }

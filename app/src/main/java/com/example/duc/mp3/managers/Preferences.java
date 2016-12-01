@@ -1,4 +1,4 @@
-package com.example.duc.mp3;
+package com.example.duc.mp3.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;

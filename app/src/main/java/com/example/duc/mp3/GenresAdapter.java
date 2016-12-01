@@ -1,10 +1,13 @@
 package com.example.duc.mp3;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.duc.mp3.managers.DbContext;
+import com.example.duc.mp3.managers.NetWorkManager;
 import com.example.duc.mp3.models.GenresItem;
 
 /**
@@ -12,6 +15,12 @@ import com.example.duc.mp3.models.GenresItem;
  */
 
 public class GenresAdapter extends RecyclerView.Adapter<GenresViewHolder> {
+
+    Context context;
+
+    public GenresAdapter(Context context){
+        this.context = context;
+    }
 
     @Override
     public GenresViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -24,13 +33,24 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresViewHolder> {
 
     @Override
     public void onBindViewHolder(GenresViewHolder holder, int position) {
-        GenresItem genresItem = GenresItem.list.get(position);
-        holder.setData(genresItem);
+        if(NetWorkManager.getInstance().isConnectedToInternet()) {
+            GenresItem genresItem = GenresItem.list.get(position);
+            holder.setData(genresItem, context);
+
+        }
+        else{
+            GenresItem genresItem = DbContext.getInstance().findAll().get(position);
+            holder.setData(genresItem, context);
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return GenresItem.list.size();
+        if(NetWorkManager.getInstance().isConnectedToInternet()) {
+            return GenresItem.list.size();
+        }
+        else
+            return DbContext.getInstance().findAll().size();
     }
 }

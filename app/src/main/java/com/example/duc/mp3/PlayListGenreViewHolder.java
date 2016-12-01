@@ -1,0 +1,28 @@
+package com.example.duc.mp3;
+
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import com.example.duc.mp3.models.PlayListItem;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * Created by DUC on 01/12/2016.
+ */
+
+public class PlayListGenreViewHolder extends RecyclerView.ViewHolder{
+    @BindView(R.id.play_list_genre_Tv)
+    TextView playlistgenretv;
+
+    public PlayListGenreViewHolder(View itemView) {
+        super(itemView);
+        ButterKnife.bind(this, itemView);
+    }
+
+    public void setData(PlayListItem playListItem){
+        playlistgenretv.setText(playListItem.getNameGenre());
+    }
+}

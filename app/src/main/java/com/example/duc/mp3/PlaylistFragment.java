@@ -3,11 +3,17 @@ package com.example.duc.mp3;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.duc.mp3.R;
+import com.example.duc.mp3.models.PlayListItem;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -15,6 +21,13 @@ import com.example.duc.mp3.R;
  */
 public class PlaylistFragment extends Fragment {
 
+    @BindView(R.id.genre_playlist_Rv)
+    RecyclerView genrelistrv;
+
+    private PlayListGenreAdapter playListGenreAdapter;
+
+
+    private static final String TAG = MainActivity.class.toString();
 
     public PlaylistFragment() {
         // Required empty public constructor
@@ -25,7 +38,27 @@ public class PlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playlist, container, false);
+        View view =inflater.inflate(R.layout.fragment_playlist, container, false);
+        ButterKnife.bind(this, view);
+        setupUI();
+        return view;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"hihi"+ PlayListItem.list.size());
+        genrelistrv.setAdapter(playListGenreAdapter);
+    }
+
+    private void setupUI(){
+        playListGenreAdapter = new PlayListGenreAdapter();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        genrelistrv.setLayoutManager(layoutManager);
+        genrelistrv.setAdapter(playListGenreAdapter);
+        Log.d(TAG,"hihi"+ PlayListItem.list.size());
+    }
+
+
 
 }

@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class JsonMedia {
-    @SerializedName("id")
     private String id;
     @SerializedName("translation_key")
     private String translation_key;

@@ -40,6 +40,22 @@ public class DbContext {
         realm.commitTransaction();
     }
 
+    public void changeFavorite(GenresItem genresItem){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        genresItem.setFavorite(true);
+        realm.commitTransaction();
+
+    }
+
+    public void changeNoFavorite(GenresItem genresItem){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        genresItem.setFavorite(false);
+        realm.commitTransaction();
+
+    }
+
     public long getSize() {
         return realm.where(GenresItem.class).count();
     }
@@ -52,5 +68,21 @@ public class DbContext {
                 realm.where(GenresItem.class)
                         .findAll();
         return genresItems;
+    }
+
+    public void deleteAll(Class<? extends GenresItem> clazz){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.delete(clazz);
+        realm.commitTransaction();
+
+    }
+
+    public void deleteAllObject(){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.commitTransaction();
+
     }
 }
