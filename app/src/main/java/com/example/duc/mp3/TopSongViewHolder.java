@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.duc.mp3.managers.NetWorkManager;
 import com.example.duc.mp3.models.TopSongItem;
 import com.squareup.picasso.Picasso;
 
@@ -31,9 +32,15 @@ public class TopSongViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setData(TopSongItem topSongItem, Context context){
-        topnamesongtv.setText(topSongItem.getName());
-        articstopsong.setText(topSongItem.getArtist());
-        Picasso.with(context).load(topSongItem.getUrlImage()).into(topsongiv);
+        if(NetWorkManager.getInstance().isConnectedToInternet()) {
+            topnamesongtv.setText(topSongItem.getName());
+            articstopsong.setText(topSongItem.getArtist());
+            Picasso.with(context).load(topSongItem.getUrlImage()).into(topsongiv);
+        }
+        else{
+            topnamesongtv.setText(topSongItem.getName());
+            articstopsong.setText(topSongItem.getArtist());
+        }
 
     }
 }

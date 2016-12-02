@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.duc.mp3.http.GENREService;
@@ -47,6 +49,10 @@ public class DetailGenreFragment extends Fragment {
     RecyclerView topsongrv;
     @BindView(R.id.favorite_Iv)
     ImageView favoriteiv;
+    @BindView(R.id.btn_Play)
+    ImageView btnPlay;
+    @BindView(R.id.btn_Back)
+    ImageView btnBack;
 
     private TopSongAdapter topSongAdapter;
 
@@ -59,6 +65,7 @@ public class DetailGenreFragment extends Fragment {
     List<GenresItem> genresItems = DbContext.getInstance().findAll();
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,12 +73,19 @@ public class DetailGenreFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_genre, container, false);
         ButterKnife.bind(this, view);
         addListener();
+        topSongAdapter = new TopSongAdapter(getContext());
         setupUI();
         setup();
         return view;
     }
 
     private void setupUI() {
+        DisplayMetrics metrics = this.getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        btnPlay.setLayoutParams(new RelativeLayout.LayoutParams(3 * width / 10,width / 5));
+        btnPlay.setY(height / 9 * 4 - width / 10 - height / 20);
+        btnPlay.setX(3 * width / 5);
         genreiv.setImageResource(genresItems.get(index).getImageId());
         nametv.setText(genresItems.get(index).getTitle());
         if(DbContext.getInstance().findAll().get(index).getFavorite()){
@@ -84,12 +98,14 @@ public class DetailGenreFragment extends Fragment {
             get();
         }
         else{
-
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            topsongrv.setLayoutManager(layoutManager);
+            topsongrv.setAdapter(topSongAdapter);
         }
     }
 
     private void get() {
-        topSongAdapter = new TopSongAdapter(getContext());
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.GENRE_API)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -127,6 +143,7 @@ public class DetailGenreFragment extends Fragment {
                                 new TopSongItem(image, name, artist,genresItems.get(index).getId());
                         DbContext.getInstance().addTopSong(topSongItemOffline);
                     }
+                    Log.d(TAG,DbContext.getInstance().findAllTopSong().size()+ "jji");
 
                 }
 
@@ -164,6 +181,12 @@ public class DetailGenreFragment extends Fragment {
                     DbContext.getInstance().changeNoFavorite(genresItem);
                     PlaylistFragment.playListGenreAdapter.notifyDataSetChanged();
                 }
+
+            }
+        });
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });

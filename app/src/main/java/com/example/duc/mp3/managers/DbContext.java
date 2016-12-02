@@ -77,14 +77,6 @@ public class DbContext {
         return genresItems;
     }
 
-    public void deleteAll(Class<? extends GenresItem> clazz){
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.delete(clazz);
-        realm.commitTransaction();
-
-    }
-
     public void deleteAllObject(){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();

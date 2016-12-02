@@ -2,6 +2,7 @@ package com.example.duc.mp3;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.example.duc.mp3.models.TopSongItem;
 
 public class TopSongAdapter extends RecyclerView.Adapter<TopSongViewHolder> {
 
+    private static final String TAG = MainActivity.class.toString();
     Context context;
 
     public TopSongAdapter(Context context) {
@@ -49,6 +51,16 @@ public class TopSongAdapter extends RecyclerView.Adapter<TopSongViewHolder> {
 
     @Override
     public int getItemCount() {
-        return TopSongItem.list.size();
+        if (NetWorkManager.getInstance().isConnectedToInternet()) {
+
+            return TopSongItem.list.size();
+        }
+        else {
+            Log.d(TAG,  "hihi");
+            return DbContext.getInstance().
+                    findTopSongByID(Preferences.getInstance().getIDTouch()).size();
+        }
+
+
     }
 }
