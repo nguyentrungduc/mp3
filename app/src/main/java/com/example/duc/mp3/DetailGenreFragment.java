@@ -191,4 +191,6 @@ public class DetailGenreFragment extends Fragment {
             }
         });
     }
+
+
 }
