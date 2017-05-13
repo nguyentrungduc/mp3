@@ -70,7 +70,6 @@ public class DbContext {
     public List<GenresItem> findAll(){
         Realm realm = Realm.getDefaultInstance();
 
-        //3 Query - lazy load
         RealmResults<GenresItem> genresItems =
                 realm.where(GenresItem.class)
                         .findAll();

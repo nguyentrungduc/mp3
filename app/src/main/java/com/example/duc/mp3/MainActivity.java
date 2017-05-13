@@ -1,45 +1,49 @@
 package com.example.duc.mp3;
 
+import android.app.FragmentTransaction;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
 
-import com.example.duc.mp3.http.GENREService;
-import com.example.duc.mp3.jsonmodels.FeedFather;
-import com.example.duc.mp3.jsonmodels.JsonInfo;
-import com.example.duc.mp3.managers.DbContext;
 import com.example.duc.mp3.managers.Preferences;
 import com.example.duc.mp3.models.TopSongItem;
+import com.example.duc.mp3.utils.Exo;
+
+import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 
-import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.toString();
+    //@BindView(R.id.miniplay_view)
+    MiniPlayerView miniplayerview;
+    private  MediaCodecAudioTrackRenderer audioRenderer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    //    EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
         Preferences.init(this);
         ButterKnife.bind(this);
+        miniplayerview = (MiniPlayerView) findViewById(R.id.miniplay_view);
         setupUI();
 
-
-
     }
+
 
     private void setupUI() {
 
@@ -70,8 +74,26 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
+    @Subscribe
+    public void onEvent(EventClass eventClass){
+        TopSongItem topSongItem = eventClass.getTopSongItem();
+        miniplayerview.setVisibility(View.VISIBLE);
+        miniplayerview.setUp(topSongItem.getName(),
+                topSongItem.getArtist(), topSongItem.getUrlImage(), this);
+        String urlStream = eventClass.getUrlPlay();
+        Exo.getInstance().play(urlStream, this);
+    }
+
+
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
+
 
 
 }

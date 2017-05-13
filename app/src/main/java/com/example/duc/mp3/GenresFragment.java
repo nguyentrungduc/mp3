@@ -58,6 +58,8 @@ public class GenresFragment extends Fragment {
         return view;
     }
 
+
+
     private void setupUI() {
         genresAdapter = new GenresAdapter(getContext());
         final GridLayoutManager manager = new

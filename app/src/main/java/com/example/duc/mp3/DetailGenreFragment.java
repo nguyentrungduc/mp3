@@ -16,14 +16,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.duc.mp3.http.GENREService;
+import com.example.duc.mp3.http.TOPSONGService;
+import com.example.duc.mp3.jsonmodels.Docs;
 import com.example.duc.mp3.jsonmodels.FeedFather;
 import com.example.duc.mp3.jsonmodels.JsonInfo;
+import com.example.duc.mp3.jsonmodels.TopSong;
 import com.example.duc.mp3.managers.DbContext;
 import com.example.duc.mp3.managers.NetWorkManager;
 import com.example.duc.mp3.managers.Preferences;
 import com.example.duc.mp3.models.GenresItem;
 import com.example.duc.mp3.models.TopSongItem;
+import com.example.duc.mp3.utils.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -70,6 +77,7 @@ public class DetailGenreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_detail_genre, container, false);
         ButterKnife.bind(this, view);
         addListener();
@@ -91,6 +99,52 @@ public class DetailGenreFragment extends Fragment {
         if(DbContext.getInstance().findAll().get(index).getFavorite()){
             favoriteiv.setColorFilter(Color.parseColor("#F44336"));
         }
+        topsongrv.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), topsongrv ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, final int position) {
+
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(Constants.BASE_API).
+                                        addConverterFactory(GsonConverterFactory.create()).build();
+                        TOPSONGService topsongService = retrofit.create(TOPSONGService.class);
+                        topsongService.callDocs( Constants.REQUESDATA1 +TopSongItem.list.get(position).getName()
+                              +" " + TopSongItem.list.get(position).getArtist()+ Constants.REQUESDATA3).enqueue(new Callback<Docs>() {
+                            @Override
+                            public void onResponse(Call<Docs> call, Response<Docs> response) {
+                                List<TopSong> topSongList = response.body().getTopSongList();
+                                ArrayList<Integer> find = new ArrayList<Integer>();
+                                for(TopSong topSong : topSongList){
+                                    find.add(FuzzyMatch.getRatio(topSong.getArtist()+
+                                                    topSong.getTitle(),
+                                            TopSongItem.list.get(position).getArtist()+
+                                                    TopSongItem.list.get(position).getName(), false));
+                                }
+                                int n = Utils.findIndexMax(find);
+                                Log.d(TAG, topSongList.get(n).getSource().getLink().toString()+"ooooo");
+                                Log.d(TAG, topSongList.get(n).getTitle() + topSongList.get(n).getArtist());
+                                EventBus.getDefault()
+                                        .post(new EventClass(TopSongItem.list.get(position)
+                                                ,topSongList.get(n).getSource().getLink()));
+                                Preferences.getInstance().putIsPlaying(true);
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<Docs> call, Throwable t) {
+                                Log.d(TAG,t.toString());
+                            }
+                        });
+
+
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                })
+        );
     }
 
     private void setup(){

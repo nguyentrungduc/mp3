@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.duc.mp3.managers.DbContext;
 import com.example.duc.mp3.managers.NetWorkManager;
+import com.example.duc.mp3.utils.Exo;
 
 import butterknife.ButterKnife;
 
@@ -17,6 +18,7 @@ public class Mp3Application extends Application {
         super.onCreate();
         NetWorkManager.init(this);
         DbContext.init(this);
+        Exo.init(this);
 
     }
 }
